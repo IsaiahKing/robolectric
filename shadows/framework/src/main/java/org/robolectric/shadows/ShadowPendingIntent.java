@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcel;
+import android.os.Parcelable.Creator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -68,6 +69,11 @@ public class ShadowPendingIntent {
   private int flags;
   private String creatorPackage;
   private boolean canceled;
+
+  @Implementation
+  protected static void __staticInitializer__() {
+    ReflectionHelpers.setStaticField(PendingIntent.class, "CREATOR", ShadowPendingIntent.CREATOR);
+  }
 
   @Implementation
   protected static PendingIntent getActivity(
@@ -380,8 +386,26 @@ public class ShadowPendingIntent {
     out.writeInt(index);
   }
 
-  private static PendingIntent create(Context context, Intent[] intents, Type type, int requestCode,
-      int flags) {
+  public static final Creator<PendingIntent> CREATOR =
+      new Creator<PendingIntent>() {
+        @Override
+        public PendingIntent createFromParcel(Parcel in) {
+          return readPendingIntentOrNullFromParcel(in);
+        }
+
+        @Override
+        public PendingIntent[] newArray(int size) {
+          return new PendingIntent[size];
+        }
+      };
+
+  @Implementation
+  protected void writeToParcel(Parcel out, int flags) {
+    writePendingIntentOrNullToParcel(realPendingIntent, out);
+  }
+
+  private static PendingIntent create(
+      Context context, Intent[] intents, Type type, int requestCode, int flags) {
     synchronized (lock) {
       Objects.requireNonNull(intents, "intents may not be null");
 

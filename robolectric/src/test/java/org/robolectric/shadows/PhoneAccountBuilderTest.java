@@ -13,12 +13,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadow.api.Shadow;
 
 /** Test for {@link org.robolectric.shadows.ShadowPhoneAccount}. */
 @RunWith(AndroidJUnit4.class)
 @Config(minSdk = M)
-public class ShadowPhoneAccountTest {
+public class PhoneAccountBuilderTest {
   private PhoneAccount phoneAccount;
 
   @Before
@@ -28,14 +27,14 @@ public class ShadowPhoneAccountTest {
     PhoneAccountHandle phoneAccountHandle =
         new PhoneAccountHandle(new ComponentName(context.getPackageName(), "CLASS"), "id");
 
-    phoneAccount = new PhoneAccount.Builder(phoneAccountHandle, "phoneAccount").build();
+    phoneAccount = new PhoneAccountBuilder(phoneAccountHandle, "phoneAccount").build();
   }
 
   @Test
   public void enabled() {
     assertThat(phoneAccount.isEnabled()).isFalse();
 
-    ((ShadowPhoneAccount) Shadow.extract(phoneAccount)).overrideIsEnabled(true);
+    phoneAccount = new PhoneAccountBuilder(phoneAccount).setIsEnabled(true).build();
 
     assertThat(phoneAccount.isEnabled()).isTrue();
   }

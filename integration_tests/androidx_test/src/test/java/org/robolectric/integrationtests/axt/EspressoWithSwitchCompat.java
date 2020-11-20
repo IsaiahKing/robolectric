@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.annotation.TextLayoutMode;
 import org.robolectric.integration.axt.R;
 
+/** Tests Espresso on Activities with {@link androidx.appcompat.widget.SwitchCompat}. */
 @RunWith(AndroidJUnit4.class)
 @TextLayoutMode(TextLayoutMode.Mode.REALISTIC)
 public class EspressoWithSwitchCompat {
